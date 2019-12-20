@@ -16,9 +16,9 @@ import sys
 
 
 now = datetime.datetime.now()
-basePath = eu("~/workspace/personal_scripts/")
+basePath = eu("~/workspace/T-PLE/")
 myEnv = environ.copy()
-myEnv["PATH"] = "/sv/venv/perscripts/bin/:" + myEnv["PATH"]
+myEnv["PATH"] = "/sv/venv/T-PLE/bin/:" + myEnv["PATH"]
 
 
 def main():
@@ -27,7 +27,7 @@ def main():
             print '<h2>Please try updating tomorrow.</h2>'
             sys.exit()
 
-    update = Popen(["/sv/venv/perscripts/bin/python2.7", basePath + "/scripts/updateELOFromLog.py"])
+    update = Popen(["/sv/venv/T-PLE/bin/python2.7", basePath + "/scripts/updateELOFromLog.py"])
     update.wait()
 
     with open(basePath + 'imaway/cgi-bin/lastUpdate', 'w') as lUpdate:
