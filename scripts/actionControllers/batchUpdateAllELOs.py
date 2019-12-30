@@ -7,7 +7,10 @@ def main():
 
     batchUpdatedELOS = ELOCal.calcBatchELOs(ELOs, winsLosses)
 
-    ELOCal.updateCells(batchUpdatedELOS, ELOCal.MAIN_SPREADSHEET_ID, ELOCal.ELORange)
+    ELOCal.updateCells(
+        values=batchUpdatedELOS,
+        sheetRange=ELOCal.ELO_Range
+    )
 
 
 if __name__ == '__main__':

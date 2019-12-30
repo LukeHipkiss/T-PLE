@@ -10,23 +10,33 @@ sheet = SAC.service.spreadsheets()
 
 MAIN_SPREADSHEET_ID = '1vzrXCtcRAs3eW6iMfqgeR_t4YebnNYyJcY66JHRKKhM'
 JFactor = 26
-WLRange = "Primary!B3:D18"  # NOTE: Increment with new player
-streakRange = "Primary!S3:V18"  # NOTE: Increment with new player
-ELORange = "ELO!B2:D18"  # NOTE: Increment with new player
-LOGRange = "WLLog!B4:C103"  # NOTE: Range of unprocessed games to capture
-PLOGRange = "WLLog!E4:F{0}"  # NOTE: Range of Processed games to capture
-UPLOGRange = "WLLog!E{0}:F{1}"  # NOTE: Range to place newly processed games
-PLOGCount = "WLLog!K3"  # NOTE: Pro-Games count cell
-PLOGRange_Offset = 3
-vsResultRange = "WLLog!N3:AD19"  # NOTE: Increment with new player and update second letter
 
-DEBUG = True
+# PRIMARY SHEET
+WL_Range = "Primary!B3:D18"  # NOTE: Increment with new player
+streak_Range = "Primary!S3:V18"  # NOTE: Increment with new player
+
+# ELO SHEET
+ELO_Range = "ELO!B2:D18"  # NOTE: Increment with new player
+HIS_ELO_Range = "ELO!F25:V{0}"  # NOTE: Update second letter with new player
+HIS_ELO_DATE = "ELO!F{0}"
+HIS_LOG_COUNT = "ELO!D25"  # NOTE: Pro-Historic ELO count cell
+HIS_LOG_OFFSET = 24
+
+# LOG SHEET
+LOG_Range = "WLLog!B4:C103"  # NOTE: Range of unprocessed games to capture
+P_LOG_Range = "WLLog!E4:F{0}"  # NOTE: Range of Processed games to capture
+UP_LOG_Range = "WLLog!E{0}:F{1}"  # NOTE: Range to place newly processed games
+P_LOG_Count = "WLLog!K3"  # NOTE: Pro-Games count cell
+P_LOG_Range_Offset = 3
+vs_Result_Range = "WLLog!N3:AC18"  # NOTE: Increment with new player and update second letter
+
+DEBUG = False
 logCount, logActions = 0, True
 
 streakDict = {}
 
 nameListS1 = ['Chris', 'Luke', 'James', 'Simone', 'Callum', 'Michael', 'Barry', 'Olly', 'Gaffer', 'Alistair', 'Tom', 'Marc', 'Katie', 'Paulina', 'Lucas', 'Lauren', 'Becca']   # NOTE: For future use
-nameList = ['Chris', 'Luke', 'James', 'Simone', 'Callum', 'Michael', 'Barry', 'Olly', 'Gaffer', 'Alistair', 'Tom', 'Marc', 'Katie', 'Paulina', 'Lauren', 'Becca']   # NOTE: Add new player here
+nameList = ['Alistair', 'Barry', 'Becca', 'Callum', 'Chris', 'Gaffer', 'James', 'Katie', 'Lauren', 'Luke', 'Marc', 'Michael', 'Olly', 'Paulina', 'Simone', 'Tom']  # NOTE: Add new player here
 
 
 def calcBatchELOs(ELOs, winsLosses):
@@ -152,7 +162,40 @@ def getELOs():
     return SAC.queryAndValidate(
         sheet=sheet,
         spreadsheetID=MAIN_SPREADSHEET_ID,
-        sheetRange=ELORange
+        sheetRange=ELO_Range
+    )
+
+
+def getHisLogCount():
+
+    log("Retrieving Historic ELO Count")
+
+    return SAC.queryAndValidate(
+        sheet=sheet,
+        spreadsheetID=MAIN_SPREADSHEET_ID,
+        sheetRange=HIS_LOG_COUNT
+    )
+
+
+def getLastLogDate(hisLogCount):
+
+    log("Retrieving Last Log Date")
+
+    return SAC.queryAndValidate(
+        sheet=sheet,
+        spreadsheetID=MAIN_SPREADSHEET_ID,
+        sheetRange=HIS_ELO_DATE.format(HIS_LOG_OFFSET + hisLogCount - 1)
+    )
+
+
+def getHistoricELOs(hisLogCount):
+
+    log("Retrieving Historic ELOs")
+
+    return SAC.queryAndValidate(
+        sheet=sheet,
+        spreadsheetID=MAIN_SPREADSHEET_ID,
+        sheetRange=HIS_ELO_Range.format(str(HIS_LOG_OFFSET + hisLogCount))
     )
 
 
@@ -163,7 +206,7 @@ def getWL():
     return SAC.queryAndValidate(
         sheet=sheet,
         spreadsheetID=MAIN_SPREADSHEET_ID,
-        sheetRange=WLRange
+        sheetRange=WL_Range
     )
 
 
@@ -174,7 +217,7 @@ def getLog(processed=False, newLogCount=None):
     return SAC.queryAndValidate(
         sheet=sheet,
         spreadsheetID=MAIN_SPREADSHEET_ID,
-        sheetRange=LOGRange if not processed else PLOGRange.format(str(int(newLogCount) + PLOGRange_Offset))
+        sheetRange=LOG_Range if not processed else P_LOG_Range.format(str(int(newLogCount) + P_LOG_Range_Offset))
     )
 
 
@@ -185,7 +228,7 @@ def getLogCount():
     return SAC.queryAndValidate(
         sheet=sheet,
         spreadsheetID=MAIN_SPREADSHEET_ID,
-        sheetRange=PLOGCount
+        sheetRange=P_LOG_Count
     )
 
 
@@ -201,7 +244,7 @@ def correctExpectedInt(ELOs):
     return ELOs
 
 
-def updateCells(values, sheetID, sheetRange, dataType="RAW"):
+def updateCells(values, sheetRange, sheetID=MAIN_SPREADSHEET_ID, dataType="RAW"):
 
     log("Updating Cells in range {}".format(sheetRange))
 

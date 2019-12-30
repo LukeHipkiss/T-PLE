@@ -4,6 +4,7 @@ from __future__ import print_function
 from scripts.baseController import baseELOCalculations as ELOCal
 import winStreakUpdate
 import updateVSResults
+import historicELOUpdate
 
 
 def main():
@@ -30,21 +31,42 @@ def main():
 
     ELOCal.debugPrint("MU: Updated ELOs", ELOs)
 
-    logCount = int(ELOCal.getLogCount()[0][0]) + ELOCal.PLOGRange_Offset + 1
+    logCount = int(ELOCal.getLogCount()[0][0]) + ELOCal.P_LOG_Range_Offset + 1
 
     if currentLog[0][0] != '':
         blankLog = [['', '']]*100
 
-        writeToRange = ELOCal.UPLOGRange.format(str(logCount), str(len(unLoggedIndexes) + logCount))
+        writeToRange = ELOCal.UP_LOG_Range.format(str(logCount), str(len(unLoggedIndexes) + logCount))
 
-        ELOCal.updateCells(blankLog, ELOCal.MAIN_SPREADSHEET_ID, ELOCal.LOGRange, dataType="USER_ENTERED")
-        ELOCal.updateCells(unLoggedIndexes, ELOCal.MAIN_SPREADSHEET_ID, writeToRange, dataType="USER_ENTERED")
+        # BLANK LOG OVER UNPROCESSED GAMES
+        ELOCal.updateCells(
+            values=blankLog,
+            sheetRange=ELOCal.LOG_Range,
+            dataType="USER_ENTERED"
+        )
 
-        ELOCal.updateCells(winsLosses, ELOCal.MAIN_SPREADSHEET_ID, ELOCal.WLRange)
-        ELOCal.updateCells(ELOs, ELOCal.MAIN_SPREADSHEET_ID, ELOCal.ELORange)
+        # WRITE NEW PROCESSED GAMES
+        ELOCal.updateCells(
+            values=unLoggedIndexes,
+            sheetRange=writeToRange,
+            dataType="USER_ENTERED"
+        )
+
+        # UPDATE WINS AND LOSSES IN PRIMARY SHEET
+        ELOCal.updateCells(
+            values=winsLosses,
+            sheetRange=ELOCal.WL_Range
+        )
+
+        # UPDATE ELOs
+        ELOCal.updateCells(
+            values=ELOs,
+            sheetRange=ELOCal.ELO_Range
+        )
 
     updateVSResults.main()
     winStreakUpdate.main()
+    historicELOUpdate.main()
 
     ELOCal.log("Complete")
 

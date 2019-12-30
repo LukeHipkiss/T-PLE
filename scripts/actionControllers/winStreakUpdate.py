@@ -17,7 +17,10 @@ def main(logCount=None):
 
     streaks = ELOCal.buildStreakListForSheet()
 
-    ELOCal.updateCells(streaks, ELOCal.MAIN_SPREADSHEET_ID, ELOCal.streakRange)
+    ELOCal.updateCells(
+        values=streaks,
+        sheetRange=ELOCal.streak_Range
+    )
 
 
 if __name__ == '__main__':

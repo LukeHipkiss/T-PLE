@@ -25,7 +25,7 @@ def main():
 
     updatedELOs = ELOCal.correctExpectedInt(updatedELOs)
 
-    # ELOCal.updateCells(updatedELOs, ELOCal.MAIN_SPREADSHEET_ID, ELOCal.ELORange)
+    # ELOCal.updateCells(updatedELOs, ELOCal.ELORange)
     print(updatedELOs)
 
 
