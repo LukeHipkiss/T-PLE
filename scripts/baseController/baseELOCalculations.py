@@ -1,29 +1,32 @@
 #!/usr/bin/python2.7
 import sys
 import math
+
 from scripts.apiController.SheetsAPIController import SheetsAPIController
+from deprecated import deprecated
 
 SAC = SheetsAPIController()
 sheet = SAC.service.spreadsheets()
 
-MAIN_SPREADSHEET_ID = '11QxgM2EySs3vbZkxoKJfbLUo7ccfD-fAC06-raQ9gQ8'
-LOG_SPREADSHEET_ID = '1sRy44EPpzkcV1HUAc4x1pvM4Erp4j9nfGgHH_yUXlo8'
-JFactor = 32
-ELORange = "ELO!A1:C18"  # NOTE: Increment with new player
-WLRange = "Primary!B3:D19"  # NOTE: Increment with new player
-streakRange = "Primary!T3:W19"  # NOTE: Increment with new player
-LOGRange = "WLLog!B3:D102"
-PLOGRange = "WLLog_Processed!B3:C{0}"
-UPLOGRange = "WLLog_Processed!B{0}:D{1}"
-PLOGCount = "WLLog_Processed!H3"
-vsResultRange = "WLLog_Processed!L4:AB20"  # NOTE: Increment with new player and update second letter
+MAIN_SPREADSHEET_ID = '1vzrXCtcRAs3eW6iMfqgeR_t4YebnNYyJcY66JHRKKhM'
+JFactor = 26
+WLRange = "Primary!B3:D18"  # NOTE: Increment with new player
+streakRange = "Primary!S3:V18"  # NOTE: Increment with new player
+ELORange = "ELO!B2:D18"  # NOTE: Increment with new player
+LOGRange = "WLLog!B4:C103"  # NOTE: Range of unprocessed games to capture
+PLOGRange = "WLLog!E4:F{0}"  # NOTE: Range of Processed games to capture
+UPLOGRange = "WLLog!E{0}:F{1}"  # NOTE: Range to place newly processed games
+PLOGCount = "WLLog!K3"  # NOTE: Pro-Games count cell
+PLOGRange_Offset = 3
+vsResultRange = "WLLog!N3:AD19"  # NOTE: Increment with new player and update second letter
 
 DEBUG = True
 logCount, logActions = 0, True
 
 streakDict = {}
 
-nameList = ['Chris', 'Luke', 'James', 'Simone', 'Callum', 'Michael', 'Barry', 'Olly', 'Gaffer', 'Alistair', 'Tom', 'Marc', 'Katie', 'Paulina', 'Lucas', 'Lauren', 'Becca']   # NOTE: Add new player here
+nameListS1 = ['Chris', 'Luke', 'James', 'Simone', 'Callum', 'Michael', 'Barry', 'Olly', 'Gaffer', 'Alistair', 'Tom', 'Marc', 'Katie', 'Paulina', 'Lucas', 'Lauren', 'Becca']   # NOTE: For future use
+nameList = ['Chris', 'Luke', 'James', 'Simone', 'Callum', 'Michael', 'Barry', 'Olly', 'Gaffer', 'Alistair', 'Tom', 'Marc', 'Katie', 'Paulina', 'Lauren', 'Becca']   # NOTE: Add new player here
 
 
 def calcBatchELOs(ELOs, winsLosses):
@@ -170,8 +173,8 @@ def getLog(processed=False, newLogCount=None):
 
     return SAC.queryAndValidate(
         sheet=sheet,
-        spreadsheetID=LOG_SPREADSHEET_ID,
-        sheetRange=LOGRange if not processed else PLOGRange.format(newLogCount)
+        spreadsheetID=MAIN_SPREADSHEET_ID,
+        sheetRange=LOGRange if not processed else PLOGRange.format(str(int(newLogCount) + PLOGRange_Offset))
     )
 
 
@@ -181,7 +184,7 @@ def getLogCount():
 
     return SAC.queryAndValidate(
         sheet=sheet,
-        spreadsheetID=LOG_SPREADSHEET_ID,
+        spreadsheetID=MAIN_SPREADSHEET_ID,
         sheetRange=PLOGCount
     )
 
@@ -211,6 +214,7 @@ def updateCells(values, sheetID, sheetRange, dataType="RAW"):
     )
 
 
+@deprecated(version="2.0", reason="Sheets separated unprocessed and processed games")
 def findUnLoggedMatches(currentLog):
 
     log("Finding unprocessed matches")
@@ -283,6 +287,18 @@ def buildStreakListForSheet():
         ])
 
     return streaks
+
+
+def cleanEmptyIndexes(currentLog):
+    nonEmptyIndexes = []
+
+    for item in currentLog:
+        if not item[0]:
+            break
+        else:
+            nonEmptyIndexes.append(item)
+
+    return nonEmptyIndexes
 
 
 def debugPrint(message="DEBUG", item=None):

@@ -29,7 +29,7 @@ def main(logCount=None):
 
     ELOCal.debugPrint("UVR: vs List Results", vsResults)
 
-    ELOCal.updateCells(vsResults, ELOCal.LOG_SPREADSHEET_ID, ELOCal.vsResultRange)
+    ELOCal.updateCells(vsResults, ELOCal.MAIN_SPREADSHEET_ID, ELOCal.vsResultRange)
 
 
 if __name__ == '__main__':
