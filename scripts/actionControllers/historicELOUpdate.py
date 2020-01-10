@@ -8,7 +8,7 @@ from datetime import date
 def main():
 
     hisLogCount = int(ELOCal.getHisLogCount()[0][0])
-    today_date = date.today().strftime("%m/%d/%Y")
+    today_date = date.today().strftime("%-m/%-d/%Y")
 
     if ELOCal.getLastLogDate(hisLogCount)[0][0] in today_date:
         ELOCal.log("HEU: Historic ELOs updated today. Exiting Historic ELO Update Call")
@@ -24,7 +24,7 @@ def main():
         historicLogEntry.append(ELO[1])
 
     historicELOs[len(historicELOs)-1] = historicLogEntry
-    historicELOs.append(["=TODAY()", "=TRANSPOSE($C$3:$C$18)"])
+    historicELOs.append(["=TODAY()", "=TRANSPOSE($C$3:$C$19)"])
 
     ELOCal.debugPrint("HEU: New Historic ELO List", historicELOs)
 
