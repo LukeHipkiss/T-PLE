@@ -13,14 +13,14 @@ MAIN_SPREADSHEET_ID = '1vzrXCtcRAs3eW6iMfqgeR_t4YebnNYyJcY66JHRKKhM'
 JFactor = 26
 
 # PRIMARY SHEET
-WL_Range = "Primary!B3:D19"  # NOTE: Increment with new player
-streak_Range = "Primary!S3:V19"  # NOTE: Increment with new player
+WL_Range = "Primary!B3:D20"  # NOTE: Increment with new player
+streak_Range = "Primary!S3:V20"  # NOTE: Increment with new player
 
 # ELO SHEET
-ELO_Range = "ELO!B2:D19"  # NOTE: Increment with new player
-HIS_ELO_Range = "ELO!F25:W{0}"  # NOTE: Update second letter with new player
+ELO_Range = "ELO!B2:D20"  # NOTE: Increment with new player
+HIS_ELO_Range = "ELO!F25:X{0}"  # NOTE: Update second letter with new player
 HIS_ELO_DATE = "ELO!F{0}"
-HIS_LOG_COUNT = "ELO!D26"  # NOTE: Increment with new player
+HIS_LOG_COUNT = "ELO!D27"  # NOTE: Increment with new player
 HIS_LOG_OFFSET = 24
 
 # LOG SHEET
@@ -29,7 +29,7 @@ P_LOG_Range = "WLLog!E4:F{0}"  # NOTE: Range of Processed games to capture
 UP_LOG_Range = "WLLog!E{0}:F{1}"  # NOTE: Range to place newly processed games
 P_LOG_Count = "WLLog!K3"  # NOTE: Pro-Games count cell
 P_LOG_Range_Offset = 3
-vs_Result_Range = "WLLog!N3:AD19"  # NOTE: Increment with new player and update second letter
+vs_Result_Range = "WLLog!N3:AE20"  # NOTE: Increment with new player and update second letter
 
 DEBUG = False
 logCount, logActions = 0, True
@@ -37,7 +37,7 @@ logCount, logActions = 0, True
 streakDict = {}
 
 nameListS1 = ['Chris', 'Luke', 'James', 'Simone', 'Callum', 'Michael', 'Barry', 'Olly', 'Gaffer', 'Alistair', 'Tom', 'Marc', 'Katie', 'Paulina', 'Lucas', 'Lauren', 'Becca']   # NOTE: For future use
-nameList = ['Alistair', 'Barry', 'Becca', 'Callum', 'Chris', 'Gaffer', 'James', 'Katie', 'Lauren', 'Luke', 'Marc', 'Michael', 'Olly', 'Paulina', 'Rusty', 'Simone', 'Tom']  # NOTE: Add new player here
+nameList = ['Alistair', 'Barry', 'Becca', 'Callum', 'Chris', 'Gaffer', 'Gina', 'James', 'Katie', 'Lauren', 'Luke', 'Marc', 'Michael', 'Olly', 'Paulina', 'Rusty', 'Simone', 'Tom']  # NOTE: Add new player here
 
 
 def calcBatchELOs(ELOs, winsLosses):
